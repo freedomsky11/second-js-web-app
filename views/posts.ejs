@@ -14,20 +14,23 @@
       <p v-for="item in postsList">{{ item }}</p>
     </div>
   </body>
-  <script>
-    var vm = new Vue({
-      el: '#app',
-      data: {
-        postsList: []
-      },
-      methods: {
-        fetchData: function() {
-          axios.get('/posts/list').then(function(response) {
-            vm.postsList = response.data.postsList;
-          })
-        }
-      }
-    });
-    vm.fetchData();
-  </script>
 </html>
+<script>
+  var vm = new Vue({
+    el: '#app',
+    data: {
+      postsList: []
+    },
+    methods: {
+      fetchData: function() {
+        axios.get('/api/posts').then(function(response) {
+          vm.postsList = response.data.postsList;
+        })
+      }
+    }
+  });
+
+setTimeout(function(){vm.fetchData()},5000);
+
+
+</script>
