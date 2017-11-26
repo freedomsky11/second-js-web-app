@@ -29,6 +29,7 @@ router.post('/posts/create', function(req, res, next) {
   post.content = content;
   post.save(function(err) {
     if (err) {
+      console.log(err);
       res.json({success: false});
     } else {
       res.json({success: true});
