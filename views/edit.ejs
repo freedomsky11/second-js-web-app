@@ -20,7 +20,7 @@
       content: ''
     },
     created() {
-      axios.get('/api/posts/one?id=' + postId)
+      axios.get('/api/v1/posts/' + postId)
         .then(function(response) {
           vm.title = response.data.post.title;
           vm.content = response.data.post.content;
@@ -31,8 +31,7 @@
     },
     methods: {
       submit() {
-        axios.post('/api/posts/edit', {
-            id: postId,
+        axios.patch('/api/v1/posts/' + postId, {
             title: vm.title,
             content: vm.content
           })
