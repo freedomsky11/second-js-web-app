@@ -28,9 +28,20 @@
     },
     methods: {
       fetchData: function() {
-        axios.get('/api/v1/posts').then(function(response) {
-          vm.postsList = response.data.postsList;
+        axios.get('/api/v1/posts')
+        .then(function(response) {
+          if (response.status !== 200) {
+            throw new Error('error!');
+          }
+
+          return response.data;
+        })
+        .then(function(data) {
+          vm.postsList = data.postsList;
           vm.postsList.forEach((element) => element.url = '/posts/show?id=' + element._id);
+        })
+        .catch(function(err) {
+          alert(err);
         });
       }
     }

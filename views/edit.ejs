@@ -36,7 +36,14 @@
             content: vm.content
           })
           .then(function(response) {
-            alert(JSON.stringify(response.data));
+            if (response.status !== 200) {
+              throw new Error('error!');
+            }
+
+            return response.data;
+          })
+          .then(function(data) {
+            window.location = '/posts/show?id=' + postId;
           })
           .catch(function(err) {
             alert(err);

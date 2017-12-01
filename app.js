@@ -42,6 +42,7 @@ app.use(function(err, req, res, next) {
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
+  // 如果不设置err.status，或默认设置为500
   res.status(err.status || 500);
   res.render('error');
 });
