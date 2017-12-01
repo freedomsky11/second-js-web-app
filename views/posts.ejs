@@ -8,18 +8,20 @@
     <li><a href="/posts/create">新建</a></li>
   </ul>
 </div>
+<div class="container">
+  <div class="col-md-8 col-md-offset-2">
+    <h1><%= title %></h1>
+    <p>Welcome to
+      <%= title %>
+    </p>
 
-<h1><%= title %></h1>
-<p>Welcome to
-  <%= title %>
-</p>
-
-<ul class="list-group">
-  <li class="list-group-item" v-for="item in postsList">
-    <a v-bind:href="item.url">{{ item.title }}</a>
-  </li>
-</ul>
-
+    <ul class="list-group">
+      <li class="list-group-item" v-for="item in postsList">
+        <a v-bind:href="item.url">{{ item.title }}</a>
+      </li>
+    </ul>
+  </div>
+</div>
 <script>
   var vm = new Vue({
     el: '#app',
@@ -29,20 +31,20 @@
     methods: {
       fetchData: function() {
         axios.get('/api/v1/posts')
-        .then(function(response) {
-          if (response.status !== 200) {
-            throw new Error('error!');
-          }
+          .then(function(response) {
+            if (response.status !== 200) {
+              throw new Error('error!');
+            }
 
-          return response.data;
-        })
-        .then(function(data) {
-          vm.postsList = data.postsList;
-          vm.postsList.forEach((element) => element.url = '/posts/show?id=' + element._id);
-        })
-        .catch(function(err) {
-          alert(err);
-        });
+            return response.data;
+          })
+          .then(function(data) {
+            vm.postsList = data.postsList;
+            vm.postsList.forEach((element) => element.url = '/posts/show?id=' + element._id);
+          })
+          .catch(function(err) {
+            alert(err);
+          });
       }
     }
   });
