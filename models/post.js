@@ -6,6 +6,6 @@ var PostSchema = new Schema({
   content: String
 });
 
-var PostModel = mongoose.model('post', PostSchema);
+const PostModel = mongoose.model('post', PostSchema);
 
 module.exports = PostModel;
