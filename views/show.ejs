@@ -1,3 +1,4 @@
+<% if(currentUser && currentUser._id.toString() === post.authorId.toString() ) { %>
 <!-- Split button -->
 <div class="btn-group pull-right">
   <button type="button" class="btn btn-default">操作</button>
@@ -9,7 +10,7 @@
     <li><a href="/posts/edit?id=<%= post._id %>">编辑</a></li>
   </ul>
 </div>
-
+<% } %>
 <div class="container">
   <div class="col-md-8 col-md-offset-2">
     <h1><%= post.title %></h1>

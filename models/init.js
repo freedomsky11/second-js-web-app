@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
+var config = require('../config');
 
-mongoose.connect('mongodb://192.168.99.100:32789/secondjsapp',{
+mongoose.connect(config.mongodbUrl,{
   useMongoClient: true
 });

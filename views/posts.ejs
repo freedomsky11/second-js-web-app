@@ -1,3 +1,5 @@
+<% if(currentUser) { %>
+<!-- Split button -->
 <div class="btn-group pull-right">
   <button type="button" class="btn btn-default">操作</button>
   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -8,6 +10,7 @@
     <li><a href="/posts/create">新建</a></li>
   </ul>
 </div>
+<% } %>
 <div class="container">
   <div class="col-md-8 col-md-offset-2">
     <h1><%= title %></h1>
