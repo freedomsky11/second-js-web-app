@@ -47,7 +47,21 @@ app.use(function(err, req, res, next) {
   // render the error page
   // 如果不设置err.status，或默认设置为500
   res.status(err.status || 500);
-  res.render('error');
+  res.format({
+    json() {
+      console.log(req);
+      res.send({error: err.toString()});
+    },
+
+    html() {
+      res.render('error');
+    },
+
+    default() {
+      const message = '${errorDetails}';
+      res.send('500 Internal server error:\n${err.toString()}');
+    },
+  })
 });
 
 module.exports = app;
