@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   cookieName: 'codeWordSpace',
   mongodbUrl: 'mongodb://localhost:32768/secondjsapp',
   admin: '1@qq.com',

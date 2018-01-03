@@ -1,10 +1,11 @@
-var PostModel = require('./models/post');
-var express = require('express');
-var router = express.Router();
-var bcrypt = require('bcrypt');
-var UserModel = require('./models/user');
-var config = require('./config');
-var auth =require('./middlewares/auth');
+import PostModel from './models/post';
+import express from 'express';
+import bcrypt from 'bcrypt';
+import UserModel from './models/user';
+import config from './config';
+import * as auth from './middlewares/auth';
+
+const router = express.Router();
 
 /* GET users list. */
 router.get('/users', function(req, res, next) {
@@ -24,10 +25,9 @@ router.get('/posts', function(req, res, next) {
 
 /* POST create post */
 router.post('/posts', auth.adminRequired, function(req, res, next) {
-  var title = req.body.title;
-  var content = req.body.content;
+  const { title, content} = req.body;
 
-  var post = new PostModel();
+  let post = new PostModel();
   post.title = title;
   post.content = content;
   post.authorId = res.locals.currentUser._id;
@@ -42,7 +42,7 @@ router.post('/posts', auth.adminRequired, function(req, res, next) {
 
 /* GET one post. */
 router.get('/posts/:id', function(req, res, next) {
-  var id = req.params.id;
+  const id = req.params.id;
 
   PostModel.findOne({_id: id}, function(err, post) {
     if(err) {
@@ -55,9 +55,7 @@ router.get('/posts/:id', function(req, res, next) {
 
 /* PATCH edit post. */
 router.patch('/posts/:id', auth.adminRequired, function(req, res, next) {
-  var id = req.params.id;
-  var title = req.body.title;
-  var content = req.body.content;
+  const { id, title, content } = req.params;
 
   PostModel.findOneAndUpdate({ _id: id }, { title, content }, function(err) {
     if(err) {
@@ -70,15 +68,13 @@ router.patch('/posts/:id', auth.adminRequired, function(req, res, next) {
 
 /* POST signup user */
 router.post('/signup', function(req, res, next) {
-  var name = req.body.name;
-  var pass = req.body.pass;
-  var rePass = req.body.rePass;
+  const { name, pass, rePass } = req.body;
 
   if (pass !== rePass) {
     return next(new Error('两次密码不对'));
   }
 
-  var user = new UserModel();
+  let user = new UserModel();
   user.name = name;
   user.pass = bcrypt.hashSync(pass, 10);
   user.save(function(err) {
@@ -92,20 +88,19 @@ router.post('/signup', function(req, res, next) {
 
 /* POST signin user */
 router.post('/signin', function(req, res, next) {
-  var name = req.body.name || '';
-  var pass = req.body.pass || '';
+  const { name, pass } = req.body;
 
   UserModel.findOne({ name }, function(err, user) {
     if (err || !user) {
       return next(new Error('找不到用户'));
     } else {
-      var isOk = bcrypt.compareSync(pass, user.pass);
+      const isOk = bcrypt.compareSync(pass, user.pass);
       if (!isOk) {
         return next(new Error('密码不对'));
       }
 
-      var authToken = user._id;
-      var opts = {
+      const authToken = user._id;
+      const opts = {
         path: '/',
         maxAge: 1000 * 60 * 60 * 24 * 30, // cookie 有效期30天
         signed: true,
@@ -118,4 +113,4 @@ router.post('/signin', function(req, res, next) {
   });
 });
 
-module.exports = router;
+export default router;

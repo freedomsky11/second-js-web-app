@@ -1,21 +1,21 @@
 require('./models/init');
-var expressLayouts = require('express-ejs-layouts');
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var auth = require('./middlewares/auth');
-var config = require('./config');
-var connectMongodb = require('connect-mongo');
-var session = require('express-session');
+import expressLayouts from 'express-ejs-layouts';
+import express from 'express';
+import path from 'path';
+import favicon from 'serve-favicon';
+import logger from 'morgan';
+import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
+import * as auth from './middlewares/auth';
+import config from './config';
+import connectMongodb from 'connect-mongo';
+import session from 'express-session';
 
-var page = require('./route.page');
-var api = require('./route.api');
+import page from './route.page';
+import api from './route.api';
 
-var MongoStore = new connectMongodb(session);
-var app = express();
+const MongoStore = new connectMongodb(session);
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -78,4 +78,4 @@ app.use(function(err, req, res, next) {
   })
 });
 
-module.exports = app;
+export default app;
