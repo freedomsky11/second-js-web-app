@@ -3,6 +3,7 @@ var express = require('express');
 var marked = require('marked');
 var router = express.Router();
 var config = require('./config');
+var auth =require('./middlewares/auth');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -15,7 +16,7 @@ router.get('/posts', function(req, res, next) {
 });
 
 /* GET posts create page. */
-router.get('/posts/create', function(req, res, next) {
+router.get('/posts/create', auth.adminRequired, function(req, res, next) {
   res.render('create');
 });
 
@@ -52,6 +53,9 @@ router.get('/signin', function(req, res, next) {
 /* GET signout */
 router.get('/signout', function(req, res, next) {
   res.clearCookie(config.cookieName, { path: '/' });
+  req.session.destroy(function(err) {
+    return next(new Error('退出失败！'));
+  })
   res.redirect('/');
 });
 
