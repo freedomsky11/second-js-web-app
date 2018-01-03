@@ -34,7 +34,7 @@ router.get('/posts/show', function (req, res, next) {
 })
 
 /* GET posts edit page. */
-router.get('/posts/edit', function (req, res, next) {
+router.get('/posts/edit', auth.adminRequired, function (req, res, next) {
   var id = req.query.id;
 
   res.render('edit', {id});
@@ -52,10 +52,8 @@ router.get('/signin', function(req, res, next) {
 
 /* GET signout */
 router.get('/signout', function(req, res, next) {
+  req.session.user = null;
   res.clearCookie(config.cookieName, { path: '/' });
-  req.session.destroy(function(err) {
-    return next(new Error('退出失败！'));
-  })
   res.redirect('/');
 });
 
