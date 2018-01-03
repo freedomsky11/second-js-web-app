@@ -8,13 +8,10 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import * as auth from './middlewares/auth';
 import config from './config';
-import connectMongodb from 'connect-mongo';
-import session from 'express-session';
 
 import page from './route.page';
 import api from './route.api';
 
-const MongoStore = new connectMongodb(session);
 const app = express();
 
 // view engine setup
@@ -29,17 +26,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser(config.cookieName));
 app.use(express.static(path.join(__dirname, 'public')));
-
-app.use(
-  session({
-    secret: config.sessionSecret,
-    store: new MongoStore({
-      url: config.mongodbUrl
-    }),
-    resave: true,
-    saveUninitialized: true
-  })
-);
 
 app.use(auth.authUser);
 app.use('/', page);
