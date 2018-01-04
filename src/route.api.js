@@ -1,127 +1,29 @@
-import PostModel from './models/post';
 import express from 'express';
-import bcrypt from 'bcrypt';
-import UserModel from './models/user';
-import config from './config';
 import * as auth from './middlewares/auth';
-import jwt from 'jwt-simple';
-import moment from 'moment';
+import * as post from './controllers/post';
+import * as user from './controllers/user';
 
 const router = express.Router();
 
 /* GET users list. */
-router.get('/users', function(req, res, next) {
-  res.send('respond with a resource');
-});
+router.get('/users', user.more);
 
 /* GET posts list. */
-router.get('/posts', function(req, res, next) {
-  PostModel.find({}, {}, function (err, posts) {
-    if (err) {
-      next(err);
-    } else {
-      res.json({ postsList: posts });
-    }
-  });
-});
+router.get('/posts', post.more);
 
 /* POST create post */
-router.post('/posts', auth.adminRequired, function(req, res, next) {
-  const { title, content} = req.body;
-
-  let post = new PostModel();
-  post.title = title;
-  post.content = content;
-  post.authorId = res.locals.currentUser._id;
-  post.save(function(err, doc) {
-    if (err) {
-      next(err);
-    } else {
-      res.json({post: doc});
-    }
-  });
-});
+router.post('/posts', auth.adminRequired, post.create);
 
 /* GET one post. */
-router.get('/posts/:id', function(req, res, next) {
-  const id = req.params.id;
-
-  PostModel.findOne({_id: id}, function(err, post) {
-    if(err) {
-      next(err);
-    }
-
-    res.json({ post });
-  });
-});
+router.get('/posts/:id', );
 
 /* PATCH edit post. */
-router.patch('/posts/:id', auth.adminRequired, function(req, res, next) {
-  const { id, title, content } = req.params;
-
-  PostModel.findOneAndUpdate({ _id: id }, { title, content }, function(err) {
-    if(err) {
-      next(err);
-    } else {
-      res.json({});
-    }
-  });
-});
+router.patch('/posts/:id', auth.adminRequired, post.edit);
 
 /* POST signup user */
-router.post('/signup', function(req, res, next) {
-  const { name, pass, rePass } = req.body;
-
-  if (pass !== rePass) {
-    return next(new Error('两次密码不对'));
-  }
-
-  let user = new UserModel();
-  user.name = name;
-  user.pass = bcrypt.hashSync(pass, 10);
-  user.save(function(err) {
-    if (err) {
-      next(err);
-    } else {
-      res.end();
-    }
-  });
-});
+router.post('/signup', user.signup);
 
 /* POST signin user */
-router.post('/signin', function(req, res, next) {
-  const { name, pass } = req.body;
-
-  UserModel.findOne({ name }, function(err, user) {
-    if (err || !user) {
-      return next(new Error('找不到用户'));
-    } else {
-      const isOk = bcrypt.compareSync(pass, user.pass);
-      if (!isOk) {
-        return next(new Error('密码不对'));
-      }
-
-      const token = jwt.encode(
-        {
-          _id: user._id,
-          name: user.name,
-          isAdmin: user.name === config.admin ? true : false,
-          exp: moment().add('days', 30).valueOf(),
-        },
-        config.jwtSecret
-      );
-      const opts = {
-        path: '/',
-        maxAge: moment().add('days', 30).valueOf(), // cookie 有效期30天
-        signed: true,
-        httpOnly: true
-      };
-
-      // 将 token 保存在 cookie 里。
-      res.cookie(config.cookieName, token, opts);
-      res.json({ token });
-    }
-  });
-});
+router.post('/signin', user.signin);
 
 export default router;

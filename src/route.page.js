@@ -1,60 +1,31 @@
-import PostModel from './models/post';
 import express from 'express';
-import marked from 'marked';
-import config from './config';
 import * as auth from './middlewares/auth';
+import * as page from './controllers/page';
 
 const router = express.Router();
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index');
-});
+router.get('/', page.homePage);
 
 /* GET posts page. */
-router.get('/posts', function(req, res, next) {
-  res.render('posts', { title: '我的文章' });
-});
+router.get('/posts', page.postsPage);
 
 /* GET posts create page. */
-router.get('/posts/create', auth.adminRequired, function(req, res, next) {
-  res.render('create');
-});
+router.get('/posts/create', auth.adminRequired, page.createPage);
 
 /* GET posts show page. */
-router.get('/posts/show', function (req, res, next) {
-  const id = req.query.id;
-
-  PostModel.findOne({_id: id}, function (err, post) {
-
-    console.log(post);
-    post.mkContent = marked(post.content);
-    console.log(post.authorId);
-    res.render('show', {post});
-  })
-})
+router.get('/posts/show', page.showPage);
 
 /* GET posts edit page. */
-router.get('/posts/edit', auth.adminRequired, function (req, res, next) {
-  const id = req.query.id;
-
-  res.render('edit', {id});
-})
+router.get('/posts/edit', auth.adminRequired, page.editPage);
 
 /* GET signup page. */
-router.get('/signup', function(req, res, next) {
-  res.render('signup');
-});
+router.get('/signup', page.signupPage);
 
 /* GET signin page. */
-router.get('/signin', function(req, res, next) {
-  res.render('signin');
-});
+router.get('/signin', page.signinPage);
 
 /* GET signout */
-router.get('/signout', function(req, res, next) {
-  res.clearCookie(config.cookieName, { path: '/' });
-  res.redirect('/');
-});
+router.get('/signout', page.signout);
 
 export default router;
