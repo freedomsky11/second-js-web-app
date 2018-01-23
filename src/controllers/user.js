@@ -9,7 +9,7 @@ export const more = (req, res, next) => {
 }
 
 export const signup = (req, res, next) => {
-  const { name, pass, rePass } = req.body;
+  const { name, email, pass, rePass } = req.body;
 
   if (pass !== rePass) {
     return next(new Error('两次密码不对'));
@@ -17,6 +17,7 @@ export const signup = (req, res, next) => {
 
   let user = new UserModel();
   user.name = name;
+  user.email = email;
   user.pass = bcrypt.hashSync(pass, 10);
   user.save(function(err) {
     if (err) {
