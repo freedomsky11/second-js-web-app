@@ -42,6 +42,7 @@
             return response.data;
           })
           .then(function(data) {
+            alert(data.message);
             window.location = '/';
           })
           .catch(function(err) {

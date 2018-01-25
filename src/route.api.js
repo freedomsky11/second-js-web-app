@@ -15,7 +15,7 @@ router.get('/posts', post.more);
 router.post('/posts', auth.adminRequired, post.create);
 
 /* GET one post. */
-router.get('/posts/:id', );
+router.get('/posts/:id', post.one); //貌似
 
 /* PATCH edit post. */
 router.patch('/posts/:id', auth.adminRequired, post.edit);
@@ -25,5 +25,8 @@ router.post('/signup', user.signup);
 
 /* POST signin user */
 router.post('/signin', user.signin);
+
+/* GET active account */
+router.get('/activeAccount', user.activeAccount);
 
 export default router;
